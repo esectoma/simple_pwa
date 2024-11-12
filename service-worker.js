@@ -1,6 +1,6 @@
 // Simple Service Worker for offline caching
 
-const CACHE_NAME = "pwa-cache-v2"; // 更新版本号
+const CACHE_NAME = "pwa-cache-v4"; // 更新版本号
 
 self.addEventListener("install", function(event) {
   event.waitUntil(
