@@ -1,7 +1,10 @@
 // Simple Service Worker for offline caching
+
+const CACHE_NAME = "pwa-cache-v2"; // 更新版本号
+
 self.addEventListener("install", function(event) {
   event.waitUntil(
-    caches.open("simple-pwa-cache").then(function(cache) {
+    caches.open(CACHE_NAME).then(function(cache) {
       return cache.addAll([
         "/",
         "/index.html",
@@ -9,6 +12,20 @@ self.addEventListener("install", function(event) {
         "/manifest.json",
         "/icon.png"
       ]);
+    })
+  );
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName); // 删除旧缓存
+          }
+        })
+      );
     })
   );
 });
