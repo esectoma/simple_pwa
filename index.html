@@ -6,6 +6,28 @@
   <title>Simple PWA</title>
   <link rel="manifest" href="manifest.json">
   <script>
+
+  let deferredPrompt;
+
+    // 监听 beforeinstallprompt 事件
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      deferredPrompt = event;
+
+      const installButton = document.getElementById('installButton');
+      installButton.style.display = 'block';
+
+      installButton.addEventListener('click', () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then((choiceResult) => {
+            console.log(choiceResult.outcome === 'accepted' ? '安装成功' : '用户拒绝了安装');
+            deferredPrompt = null;
+          });
+        }
+      });
+    });
+
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("/service-worker.js").then(function(registration) {
         console.log("Service Worker registered with scope:", registration.scope);
