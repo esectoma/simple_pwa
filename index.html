@@ -9,15 +9,15 @@
   <link rel="manifest" href="manifest.json">
   <script>
 
-    // 自动创建并触发跳转
-    function autoNavigateWithTarget(url, target) {
-      const link = document.createElement('a'); // 创建一个 <a> 标签
-      link.href = url; // 设置跳转的目标 URL
-      link.target = target; // 设置跳转的目标位置，比如 "_blank"（新窗口）或 "_self"（当前窗口）
+    // // 自动创建并触发跳转
+    // function autoNavigateWithTarget(url, target) {
+    //   const link = document.createElement('a'); // 创建一个 <a> 标签
+    //   link.href = url; // 设置跳转的目标 URL
+    //   link.target = target; // 设置跳转的目标位置，比如 "_blank"（新窗口）或 "_self"（当前窗口）
 
-      // 触发链接的点击事件，进行跳转
-      link.click();
-    }
+    //   // 触发链接的点击事件，进行跳转
+    //   link.click();
+    // }
 
     // const userAgent = navigator.userAgent || navigator.vendor || window.opera;
     
@@ -92,9 +92,8 @@
 
   <div id="dynamicText">这里的文本会被替换。</div>
 
-  <script>
-    document.getElementById('dynamicText').innerHTML = userAgent;
-  </script>
+  <a href="intent://esectoma.github.io/simple_pwa/#Intent;scheme=https;package=com.android.chrome;end">abc</a>
+
 </body>
 
 </html>
