@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,20 @@
   <link rel="manifest" href="manifest.json">
   <script>
 
-  let deferredPrompt;
+    function isInWebView() {
+      const userAgent = navigator.userAgent;
+      console.log("userAgent:" + userAgent);
+      // 针对一些常见的 WebView 环境（例如 Android 和 iOS）
+      return /wv|webview/i.test(userAgent) || /Android/i.test(userAgent) || /iPhone|iPad|iPod/i.test(userAgent);
+    }
+
+    if (isInWebView()) {
+      console.log("当前在 WebView 中运行");
+    } else {
+      console.log("当前不在 WebView 中运行");
+    }
+
+    let deferredPrompt;
 
     // 监听 beforeinstallprompt 事件
     window.addEventListener('beforeinstallprompt', (event) => {
@@ -28,21 +42,45 @@
       });
     });
 
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/service-worker.js").then(function(registration) {
-        console.log("Service Worker registered with scope:", registration.scope);
-      }).catch(function(error) {
-        console.log("Service Worker registration failed:", error);
+    // 在页面加载时注销所有已注册的 Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        // 获取所有已注册的 Service Worker
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+          // 循环注销每个 Service Worker
+          const unregisterPromises = registrations.map((registration) => {
+            console.log("旧的:",registration)
+            return registration.unregister();  // 注销当前注册的 Service Worker
+          });
+
+          // 等待所有注销操作完成后再注册新的 Service Worker
+          Promise.all(unregisterPromises).then(() => {
+            console.log('所有旧的 Service Worker 已注销');
+
+            // 现在可以注册新的 Service Worker
+            navigator.serviceWorker.register('/service-worker.js').then((registration) => {
+              console.log('新的 Service Worker 已注册:', registration);
+            }).catch((error) => {
+              console.error('注册 Service Worker 失败:', error);
+            });
+          }).catch((error) => {
+            console.error('注销 Service Worker 时发生错误:', error);
+          });
+        }).catch((error) => {
+          console.error('获取 Service Worker 注册信息失败:', error);
+        });
       });
     }
+
   </script>
 </head>
+
 <body>
   <h1>Welcome to the Simple PWA!</h1>
   <p>This is a basic Progressive Web App example.</p>
 
-  <button id="installButton">Install11</button>
+  <button id="installButton">Install</button>
 
 </body>
+
 </html>
-    
